@@ -1,22 +1,16 @@
 import {
-  Box,
   FlatList,
   NativeBaseProvider,
-  Text,
-  HStack,
-  Avatar,
-  VStack,
-  Spacer,
+  Flex,
+  StatusBar,
+  Center,
   Heading,
-  View,
-  Icon,
 } from 'native-base';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet} from 'react-native';
-import AppName from './AppName';
 import SampleData, {SampleData2} from './SampleData';
 import WeatherApi from './WeatherApi';
 import {Entypo} from '@native-base/icons';
+import DailyWeatherUI from './DailyWeatherUI/index.js';
 
 export default function WeatherHome() {
   const [weatherData, setWeatherData] = useState('');
@@ -40,64 +34,20 @@ export default function WeatherHome() {
 
   return (
     <NativeBaseProvider>
-      <VStack>
-        <AppName />
+      <Flex direction="column">
+        <StatusBar barStyle={'light-content'} />
+        <Center bg="green.100" height={20}>
+          <Heading>Weather App</Heading>
+        </Center>
+        <Heading color="white" ml={5} mt={5}>
+          {SampleData2.address} weather this week
+        </Heading>
         <FlatList
           data={SampleData2.days}
-          mt="20"
-          renderItem={({item}) => (
-            <Box
-              borderBottomWidth="1"
-              _dark={{
-                borderColor: 'muted.50',
-              }}
-              borderColor="muted.800"
-              pl={['0', '4']}
-              pr={['0', '5']}
-              mx="10"
-              my="5"
-              py="2">
-              <HStack space={[2, 3]} justifyContent="space-between">
-                <Icon as={Entypo} name="suitcase" size="24" />
-                <VStack>
-                  <Text
-                    _dark={{
-                      color: 'warmGray.50',
-                    }}
-                    color="white"
-                    bold>
-                    {item.conditions}
-                  </Text>
-                  <Text
-                    color="white"
-                    _dark={{
-                      color: 'warmGray.200',
-                    }}>
-                    {item.description}
-                  </Text>
-                </VStack>
-                <Spacer />
-                <Text
-                  color="black"
-                  _dark={{
-                    color: 'warmGray.200',
-                  }}>
-                  {item.datetime}
-                </Text>
-              </HStack>
-            </Box>
-          )}
-          keyExtractor={item => item.id}
+          renderItem={({item}) => <DailyWeatherUI WeatherData={item} />}
+          keyExtractor={(item, index) => index}
         />
-      </VStack>
+      </Flex>
     </NativeBaseProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'grey',
-    flexDirection: 'column',
-  },
-});
