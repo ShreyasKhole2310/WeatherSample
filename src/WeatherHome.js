@@ -5,49 +5,66 @@ import {
   StatusBar,
   Center,
   Heading,
+  Text,
+  Box,
+  VStack,
 } from 'native-base';
 import React, {useEffect, useState} from 'react';
-import SampleData, {SampleData2} from './SampleData';
 import WeatherApi from './WeatherApi';
 import {Entypo} from '@native-base/icons';
 import DailyWeatherUI from './DailyWeatherUI/index.js';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {AppColor} from '../constcolors';
 
-export default function WeatherHome() {
+export default function WeatherHome({navigation}) {
   const [weatherData, setWeatherData] = useState('');
 
   const WeatherApiCall =
     'https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services' +
-    '/timeline/Pune?unitGroup=metric&key=LR6KWXFQ5KUVDTCKEJAHVC5AS&contentType=json';
+    '/timeline/Mumbai?unitGroup=metric&key=LR6KWXFQ5KUVDTCKEJAHVC5AS&contentType=json';
 
   const getData = () => {
     WeatherApi(WeatherApiCall)
       .then(res => {
-        setWeatherData(res.days);
+        setWeatherData(res);
         // setWeatherData(JSON.stringify(res.days[4]));
       })
       .catch(val => console.log(val));
   };
 
   useEffect(() => {
-    // getData();
+    getData();
   }, []);
 
   return (
     <NativeBaseProvider>
-      <Flex direction="column">
-        <StatusBar barStyle={'light-content'} />
-        <Center bg="green.100" height={20}>
-          <Heading>Weather App</Heading>
-        </Center>
-        <Heading color="white" ml={5} mt={5}>
-          {SampleData2.address} weather this week
-        </Heading>
-        <FlatList
-          data={SampleData2.days}
-          renderItem={({item}) => <DailyWeatherUI WeatherData={item} />}
-          keyExtractor={(item, index) => index}
-        />
-      </Flex>
+      <SafeAreaView>
+        <Flex direction="column" bgColor={AppColor}>
+          <StatusBar barStyle={'light-content'} />
+          <Center height="5%">
+            <Heading color="white">{weatherData.address}</Heading>
+          </Center>
+          <Box
+            border="1"
+            borderRadius="xl"
+            m={3}
+            bgColor="gray.600"
+            padding={5}>
+            <VStack space="1">
+              <Text color="white" fontSize="sm">
+                {weatherData && weatherData.days[0].description}
+              </Text>
+            </VStack>
+          </Box>
+          <FlatList
+            data={weatherData.days}
+            renderItem={({item}) => (
+              <DailyWeatherUI WeatherData={item} navigation={navigation} />
+            )}
+            keyExtractor={(item, index) => index}
+          />
+        </Flex>
+      </SafeAreaView>
     </NativeBaseProvider>
   );
 }

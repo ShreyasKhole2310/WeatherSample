@@ -5,6 +5,6 @@
 import {AppRegistry} from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';
-import WeatherHome from './src/WeatherHome';
+import AppStart from './src/AppStart';
 
-AppRegistry.registerComponent(appName, () => WeatherHome);
+AppRegistry.registerComponent(appName, () => AppStart);

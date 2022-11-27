@@ -1,32 +1,32 @@
 import moment from 'moment';
 import {Box, HStack, Icon, Text} from 'native-base';
 import React from 'react';
+import {Pressable} from 'react-native';
 import Cloudy from '../assets/images/cloudy.svg';
 
-function DailyWeatherUI({WeatherData}) {
+function DailyWeatherUI({WeatherData, navigation}) {
   return (
-    <Box
-      pl={['0', '4']}
-      pr={['0', '5']}
-      mx="10"
-      my="5"
-      py="2"
-      w="80%"
-      borderBottomColor="white"
-      borderBottomWidth={1}>
-      <HStack>
-        <Text color="white" fontSize="xl" fontWeight="bold" w="35%">
-          {moment(WeatherData.datetime).format('dddd')}
-        </Text>
-        <Text color="white" w="20%">
-          {WeatherData.tempmax}
-        </Text>
-        <Text color="white" w="20%">
-          {WeatherData.tempmin}
-        </Text>
-        <Cloudy width={120} height={50} />
-      </HStack>
-    </Box>
+    <Pressable
+      onPress={() =>
+        navigation.navigate('Details', {date: WeatherData.datetime})
+      }>
+      <Box my="2" mx="5" py="2" w="90%">
+        <HStack>
+          <Text color="white" fontSize="xl" fontWeight="bold" w="35%">
+            {moment(WeatherData.datetime).format('dddd')}
+          </Text>
+          <Text color="white" w="20%">
+            {WeatherData.tempmax}
+            {'\u00b0'}
+          </Text>
+          <Text color="white" w="20%">
+            {WeatherData.tempmin}
+            {'\u00b0'}
+          </Text>
+          <Cloudy />
+        </HStack>
+      </Box>
+    </Pressable>
   );
 }
 
